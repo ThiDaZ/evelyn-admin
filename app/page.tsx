@@ -1,8 +1,12 @@
+"use client"
+import { LoginForm } from "@/components/login-form"
 
-export default function Home() {
+export default function LoginPage() {
   return (
-    <div className="bg-black w-full h-screen flex items-center justify-center">
-
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <LoginForm />
+      </div>
     </div>
-  );
+  )
 }
