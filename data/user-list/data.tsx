@@ -1,12 +1,9 @@
 import {
-    ArrowDown,
-    ArrowRight,
-    ArrowUp,
-    CheckCircle,
-    Circle,
-    CircleOff,
-    HelpCircle,
-    Timer,
+  Ban,
+    CircleCheck,
+    TestTubeDiagonal,
+    UserRoundCog,
+    UsersRound,
   } from "lucide-react"
   
   export const labels = [
@@ -26,46 +23,31 @@ import {
   
   export const statuses = [
     {
-      value: "backlog",
-      label: "Backlog",
-      icon: HelpCircle,
+      value: "active",
+      label: "Active",
+      icon: CircleCheck,
     },
     {
-      value: "todo",
-      label: "Todo",
-      icon: Circle,
-    },
-    {
-      value: "in progress",
-      label: "In Progress",
-      icon: Timer,
-    },
-    {
-      value: "done",
-      label: "Done",
-      icon: CheckCircle,
-    },
-    {
-      value: "canceled",
-      label: "Canceled",
-      icon: CircleOff,
+      value: "deactivated",
+      label: "Deactivated",
+      icon: Ban,
     },
   ]
   
-  export const priorities = [
+  export const roles = [
     {
-      label: "Low",
-      value: "low",
-      icon: ArrowDown,
+      label: "Admin",
+      value: "admin",
+      icon: UserRoundCog,
     },
     {
-      label: "Medium",
-      value: "medium",
-      icon: ArrowRight,
+      label: "Skin Expert",
+      value: "skin_expert",
+      icon: TestTubeDiagonal,
     },
     {
-      label: "High",
-      value: "high",
-      icon: ArrowUp,
+      label: "User",
+      value: "user",
+      icon: UsersRound,
     },
   ]

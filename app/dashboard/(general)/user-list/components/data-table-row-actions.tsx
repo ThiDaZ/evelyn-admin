@@ -1,55 +1,114 @@
-"use client"
+"use client";
 
-import { Row } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import { Row } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
+  // DropdownMenuRadioGroup,
+  // DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
+  // DropdownMenuSub,
+  // DropdownMenuSubContent,
+  // DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-import { labels } from "@/data/user-list/data"
-import { taskSchema } from "@/data/user-list/schema"
+} from "@/components/ui/dropdown-menu";
+// import { labels } from "@/data/user-list/data";
+import { userSchema } from "@/data/user-list/schema";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase/config";
+import { toast } from "sonner";
+import { DataEdiDialog } from "./data-edit-dialog";
+import { useEffect, useState } from "react";
+import { getSessionUserEmail } from "@/lib/utils";
+// import { getSessionUserEmail } from "@/lib/utils";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+  row: Row<TData>;
+  fetchUsers: () => void; // Accept fetchUsers function as a prop
 }
 
 export function DataTableRowActions<TData>({
   row,
+  fetchUsers, // Use fetchUsers function
 }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original)
+  const users = userSchema.parse(row.original);
+  const [disable, setDisable] = useState(false);
+
+  useEffect(() => {
+    if (users.email === getSessionUserEmail()) {
+      setDisable(true);
+    }
+  }, [users.email]);
+
+  const handleDeactivateUserByEmail = async (email: string) => {
+    if (!email) return;
+
+    try {
+      const q = query(collection(db, "users"), where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        toast.warning("User not found!");
+        return;
+      }
+
+      const userDoc = querySnapshot.docs[0];
+      const newStatus = users.status === "active" ? "deactivated" : "active";
+      await updateDoc(doc(db, "users", userDoc.id), {
+        status: newStatus,
+      });
+
+      fetchUsers(); // Refresh the table after update
+      toast.success("User " + newStatus + " successfully");
+    } catch (error) {
+      console.error("Error deactivating user:", error);
+    }
+  };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
-          <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
+      {disable ? (
+        <DropdownMenuTrigger asChild disabled>
+          <Button
+            variant="ghost"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          >
+            <MoreHorizontal />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+      ) : (
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          >
+            <MoreHorizontal />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+      )}
+
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
+        <DropdownMenuItem asChild>
+          <DataEdiDialog userEmail={users.email} getUsers={fetchUsers} />
+        </DropdownMenuItem>
+        {/* <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Roles</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
+            <DropdownMenuRadioGroup value={users.status}>
               {labels.map((label: { value: string; label: string }) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
@@ -57,13 +116,15 @@ export function DataTableRowActions<TData>({
               ))}
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
+        <DropdownMenuItem
+          onClick={() => handleDeactivateUserByEmail(users.email)}
+        >
+          {users.status === "active" ? "Deactivate" : "Activate"}
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

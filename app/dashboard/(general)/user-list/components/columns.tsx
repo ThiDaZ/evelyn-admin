@@ -1,16 +1,13 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-
-import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-
-import { labels, priorities, statuses } from "@/data/user-list/data"
-import { Task } from "@/data/user-list/schema"
+import { roles, statuses } from "@/data/user-list/data"
+import { Users } from "@/data/user-list/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 
-export const columns: ColumnDef<Task>[] = [
+export const getColumns = (fetchUsers: () => void): ColumnDef<Users>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -36,37 +33,37 @@ export const columns: ColumnDef<Task>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
+    accessorKey: "fullName", //id
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Task" />
+      <DataTableColumnHeader column={column} title="Full Name" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-    enableSorting: false,
+    cell: ({ row }) => <div className="space-x-2 max-w-[500px] ">{row.getValue("fullName")}</div>,
     enableHiding: false,
   },
   {
-    accessorKey: "title",
+    accessorKey: "email", //title
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
+      <DataTableColumnHeader column={column} title="Email" />
     ),
-    cell: ({ row }) => {
-      const label = labels.find((label: { value: string; label: string }) => label.value === row.original.label)
-
-      return (
-        <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
-          <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("title")}
-          </span>
-        </div>
-      )
-    },
+    cell: ({ row }) => (
+      <div className="flex w-[180px]">
+        <span className="truncate font-medium">
+          {row.getValue("email")}
+        </span>
+      </div>
+    ),
   },
   {
-    accessorKey: "status",
+    accessorKey: "mobile",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title="Mobile" />
     ),
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("mobile")}</div>,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "status", //status
+    header: ({ column }) => (<DataTableColumnHeader column={column} title="Status" />),
     cell: ({ row }) => {
       const status = statuses.find(
         (status: { value: string; label: string; icon?: React.ComponentType }) => status.value === row.getValue("status")
@@ -90,25 +87,25 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "priority",
+    accessorKey: "role",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Priority" />
+      <DataTableColumnHeader column={column} title="Role" />
     ),
     cell: ({ row }) => {
-      const priority = priorities.find(
-        (priority: { value: string; label: string; icon?: React.ComponentType }) => priority.value === row.getValue("priority")
+      const role = roles.find(
+        (role: { value: string; label: string; icon?: React.ComponentType }) => role.value === row.getValue("role")
       )
 
-      if (!priority) {
+      if (!role) {
         return null
       }
 
       return (
         <div className="flex items-center">
-          {priority.icon && (
-            <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+          {role.icon && (
+            <role.icon className="mr-2 h-4 w-4 text-muted-foreground" />
           )}
-          <span>{priority.label}</span>
+          <span>{role.label}</span>
         </div>
       )
     },
@@ -118,6 +115,6 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => <DataTableRowActions row={row} fetchUsers={fetchUsers} />, // Pass fetchUsers function
   },
 ]
