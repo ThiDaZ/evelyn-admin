@@ -1,24 +1,24 @@
-import { Button } from "@/components/ui/button";
-import { UserPlus } from "lucide-react";
+"use client"
 import { DataTable } from "./components/data-table";
-import { columns } from "./components/columns";
-import { z } from "zod"
-import fs from "fs/promises";
-import path from "path";
-import { taskSchema } from "@/data/user-list/schema"
+import { getColumns } from "./components/columns"; // Import getColumns function
+import { z } from "zod";
+import { userSchema } from "@/data/user-list/schema";
+import { getUsers } from "./utils/getUsers"; // Import getUsers function
+import { useEffect, useState } from "react";
+import { DataAddDialog } from "./components/data-add-dialog"; // Import DataAddDialog component
 
-async function getTasks() {
-  const data = await fs.readFile(
-    path.join(process.cwd(), "data/user-list/task.json")
-  );
+export default function Page() {
+  const [users, setUsers] = useState<z.infer<typeof userSchema>[]>([]);
 
-  const tasks = JSON.parse(data.toString());
+  const fetchUsers = async () => {
+    const usersData = await getUsers();
+    setUsers(usersData);
+  };
 
-  return z.array(taskSchema).parse(tasks);
-}
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-export default async function Page() {
-  const tasks = await getTasks();
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="flex items-center justify-between space-y-2">
@@ -29,14 +29,11 @@ export default async function Page() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button className="font-medium gap-3">
-            Add User
-            <UserPlus />
-          </Button>
+          <DataAddDialog getUsers={fetchUsers} />
         </div>
       </div>
 
-      <DataTable data={tasks} columns={columns} />
+      {users.length > 0 ? <DataTable data={users} columns={getColumns(fetchUsers)} /> : <p>Loading...</p>}
 
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </div>

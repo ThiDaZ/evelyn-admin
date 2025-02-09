@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signInWithEmailAndPassword, signOut, User, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { toast } from "sonner";
 
 interface UserData {
   email: string;
@@ -21,7 +22,6 @@ interface UserData {
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  // const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -64,13 +64,13 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           router.push("/dashboard"); // Redirect to dashboard if user is admin
         } else {
           signOut(auth);
-          alert("You are not authorized to access this page");
+          toast.warning("You are not authorized to access this page");
           localStorage.removeItem("user");
         }
       }
     } catch (err) {
       console.error(err);
-      alert("Invalid email or password");
+      toast.error("Invalid email or password");
     }
     setLoading(false);
   };

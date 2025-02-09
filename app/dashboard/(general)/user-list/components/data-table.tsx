@@ -27,15 +27,19 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
+// import { z } from "zod"
+// import { userSchema } from "@/data/user-list/schema"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  // setUsers: z.infer<typeof userSchema>[]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  // setUsers,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
