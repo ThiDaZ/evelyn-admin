@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Brand } from "@/data/brand-list/schema"
 import { DataTableColumnHeader } from "@/components/data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
+import Image from "next/image"
 
 export const getColumns = (fetchBrands: () => void): ColumnDef<Brand>[] => [
   {
@@ -32,11 +33,32 @@ export const getColumns = (fetchBrands: () => void): ColumnDef<Brand>[] => [
     enableHiding: false,
   },
   {
+    accessorKey: "logo",
+    header: "Logo",
+    cell: ({ row }) => (
+      <Image
+        src={row.getValue("logo") || "/placeholder.svg"}
+        alt={row.getValue("brandName")}
+        width={50}
+        height={50}
+        className="rounded-md"
+      />
+    ),
+  },
+  {
     accessorKey: "brandName", //id
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Brand Name" />
     ),
     cell: ({ row }) => <div className="space-x-2 max-w-[500px] ">{row.getValue("brandName")}</div>,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "country", 
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Country" />
+    ),
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("country")}</div>,
     enableHiding: false,
   },
 

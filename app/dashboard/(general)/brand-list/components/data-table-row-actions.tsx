@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { DataEdiDialog } from "./data-edit-dialog";
 import { useEffect, useState } from "react";
 import { getSessionUserEmail } from "@/lib/utils";
+import { brandSchema } from "@/data/brand-list/schema";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -33,7 +34,7 @@ export function DataTableRowActions<TData>({
   row,
   fetchBrands,
 }: DataTableRowActionsProps<TData>) {
-  // const users = userSchema.parse(row.original);
+  const initialData = brandSchema.parse(row.original);
   // const [disable, setDisable] = useState(false);
 
   // useEffect(() => {
@@ -81,7 +82,7 @@ export function DataTableRowActions<TData>({
 
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem asChild>
-          <DataEdiDialog getBrands={fetchBrands} />
+          <DataEdiDialog getBrands={fetchBrands} row={initialData}/>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

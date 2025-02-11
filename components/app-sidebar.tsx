@@ -11,6 +11,7 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  Tag,
   Users,
 } from "lucide-react"
 
@@ -26,7 +27,6 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -66,6 +66,11 @@ const data = {
       title: "Users",
       url: "/dashboard/user-list",
       icon: Users,
+    },
+    {
+      title: "Brands",
+      url: "/dashboard/brand-list",
+      icon: Tag,
     },
     {
       title: "Settings",
