@@ -27,8 +27,7 @@ import {
 
 import { DataTablePagination } from "@/components/data-table-pagination"
 import { DataTableToolbar } from "@/components/data-table-toolbar"
-import { viewOption, search, filters} from "@/data/user-list/data";
-
+import { search, viewOption } from "@/data/brand-list/data"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -69,15 +68,9 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  const tableData = {
-    filters: [],
-    search,
-    viewOption,
-  }
-
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filters={filters} search={search} viewOption={viewOption} />
+      <DataTableToolbar table={table} search={search} viewOption={viewOption} filters={[]} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

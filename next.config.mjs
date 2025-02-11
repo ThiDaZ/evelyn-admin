@@ -1,7 +1,9 @@
 // import type { NextConfig } from "next";
 
 const nextConfig = {
-  /* config options here */
+  images: {
+    domains: ['firebasestorage.googleapis.com'], // Allow Firebase Storage domain
+  },
 };
-
+  
 export default nextConfig;
