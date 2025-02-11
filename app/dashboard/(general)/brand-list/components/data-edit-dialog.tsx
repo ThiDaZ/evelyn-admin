@@ -168,7 +168,7 @@ export function DataEdiDialog({
                 Country
               </Label>
               <Input
-                id="lastName"
+                id="country"
                 required
                 className="col-span-3"
                 value={formData.country}

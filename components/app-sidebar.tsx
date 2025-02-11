@@ -9,10 +9,10 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
-  SquareTerminal,
+  List,
   Tag,
   Users,
+  SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -26,6 +26,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+
+import { useEffect } from "react"
+import { getSessionUserDetails } from "@/lib/utils"
 
 const data = {
   user: {
@@ -73,9 +76,9 @@ const data = {
       icon: Tag,
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
+      title: "Categories",
+      url: "/dashboard/category-list",
+      icon: List,
     },
   ],
   projects: [
@@ -98,6 +101,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

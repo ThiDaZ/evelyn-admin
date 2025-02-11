@@ -19,9 +19,6 @@ import {
   doc,
   addDoc,
   updateDoc,
-  query,
-  setDoc,
-  where,
 } from "firebase/firestore";
 import { toast } from "sonner";
 import { getFile, uploadFile } from "@/lib/firebase/storage";

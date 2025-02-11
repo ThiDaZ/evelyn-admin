@@ -10,18 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataEdiDialog } from "./data-edit-dialog";
-import { brandSchema } from "@/data/brand-list/schema";
+import { categorySchema } from "@/data/category-list/schema";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
-  fetchBrands: () => void;
+  fetchCategories: () => void;
 }
 
 export function DataTableRowActions<TData>({
   row,
-  fetchBrands,
+  fetchCategories,
 }: DataTableRowActionsProps<TData>) {
-  const initialData = brandSchema.parse(row.original);
+  const initialData = categorySchema.parse(row.original);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +37,7 @@ export function DataTableRowActions<TData>({
 
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem asChild>
-          <DataEdiDialog getBrands={fetchBrands} row={initialData}/>
+          <DataEdiDialog getCategories={fetchCategories} row={initialData}/>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
