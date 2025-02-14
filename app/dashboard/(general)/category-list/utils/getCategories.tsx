@@ -12,7 +12,7 @@ export const getCategories = async () => {
       ...doc.data(),
     }));
     const brandTypeSchema = z.array(categorySchema).parse(categoriesData);
-    console.log(brandTypeSchema);
+    // console.log(brandTypeSchema);
     return brandTypeSchema;
   } catch (e) {
     console.log(e);
