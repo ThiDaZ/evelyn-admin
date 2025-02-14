@@ -5,7 +5,8 @@ import { z } from "zod";
 import { productSchema } from "@/data/product-list/schema";
 import { getProducts } from "./utils/getProducts";
 import { useEffect, useState } from "react";
-// import { DataAddDialog } from "./components/data-add-dialog";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function page() {
   const [products, setProducts] = useState<z.infer<typeof productSchema>[]>([]);
@@ -29,8 +30,9 @@ export default function page() {
           </p>
         </div>
         <div className="flex items-center space-x-2 ">
-
-          {/* <DataAddDialog getProducts={fetchProducts} /> */}
+          <Link href={"/dashboard/product-list/product-add"}>
+            <Button className="font-medium gap-3">Add Product</Button>
+          </Link>
         </div>
       </div>
       {products.length > 0 ? (

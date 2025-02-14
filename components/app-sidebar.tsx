@@ -13,6 +13,7 @@ import {
   Tag,
   Users,
   SquareTerminal,
+  PersonStanding,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -26,9 +27,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { list } from "firebase/storage"
 
-import { useEffect } from "react"
-import { getSessionUserDetails } from "@/lib/utils"
 
 const data = {
   user: {
@@ -61,8 +61,8 @@ const data = {
       isActive: true,
     },
     {
-      title: "Reports",
-      url: "#",
+      title: "Product",
+      url: "/dashboard/product-list",
       icon: BookOpen,
     },
     {
@@ -79,6 +79,11 @@ const data = {
       title: "Categories",
       url: "/dashboard/category-list",
       icon: List,
+    },
+    {
+      title: "Skin Types",
+      url: "/dashboard/skinType-list",
+      icon: PersonStanding,
     },
   ],
   projects: [

@@ -9,24 +9,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { DataEdiDialog } from "./data-edit-dialog";
-import { productSchema } from "@/data/product-list/schema";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { DataEdiDialog } from "./data-edit-dialog";
+import { skinTypeSchema } from "@/data/skinType-list/schema";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
-  fetchProducts: () => void;
+  fetchSkinTypes: () => void;
 }
 
 export function DataTableRowActions<TData>({
   row,
-  fetchProducts,
+  fetchSkinTypes,
 }: DataTableRowActionsProps<TData>) {
-  const router = useRouter();
+  const initialData = skinTypeSchema.parse(row.original);
 
-
-  const initialData = productSchema.parse(row.original);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,14 +37,7 @@ export function DataTableRowActions<TData>({
 
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem asChild>
-          <Link href={`/dashboard/product-list/product-edit/${initialData.productID}`}>
-            <Button
-              variant="ghost"
-              className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-            >
-              Edit
-            </Button>
-          </Link>
+          <DataEdiDialog getSkinTypes={fetchSkinTypes} row={initialData}/>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

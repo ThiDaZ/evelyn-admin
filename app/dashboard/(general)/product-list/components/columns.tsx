@@ -76,19 +76,19 @@ export const getColumns = (fetchProducts: () => void): ColumnDef<Product>[] => [
     enableHiding: false,
   },
   {
-    accessorKey: "brandID", 
+    accessorKey: "brandName", 
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="brand" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("brandID")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("brandName")}</div>,
     enableHiding: false,
   },
   {
-    accessorKey: "categoryID", 
+    accessorKey: "categoryName", 
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("categoryID")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("categoryName")}</div>,
     enableHiding: false,
   },
   {
