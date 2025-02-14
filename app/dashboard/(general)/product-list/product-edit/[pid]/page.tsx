@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import ProductForm from "../../components/ProductForm";
 import type { ProductFormData, Product } from "../../types/product";
@@ -18,13 +18,13 @@ import { toast } from "sonner";
 import { dupesSchema, productSchema } from "@/data/product-list/schema";
 import { getDupes } from "../../utils/getDupes";
 import { getSingleProduct } from "../../utils/getProducts";
-import { useParams } from "next/navigation";
 
 export default function EditProduct({
   params,
 }: {
-  params: { productID: string };
+  params: Promise<{ pid: string }>
 }) {
+  const resolvedParams = use(params);
   const [isLoading, setIsLoading] = useState(false);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const router = useRouter();
@@ -34,20 +34,10 @@ export default function EditProduct({
   const [dupes, setDupes] = useState<z.infer<typeof dupesSchema>[]>([]);
   const [product, setProducts] = useState<z.infer<typeof productSchema>[]>([]);
 
-  const parameter = useParams();
-  const pid = parameter.pid as string;
-  
-  if (!pid) {
-    return <div>Invalid product ID</div>;
-  }
-
   const getProduct = async () => {
-    if (typeof pid === "string") {
-      const productData = await getSingleProduct(pid);
-      if (productData) {
-        setProducts([productData]);
-        // console.log(product)
-      }
+    const productData = await getSingleProduct(resolvedParams.pid);
+    if (productData) {
+      setProducts([productData]);
     }
   };
 
@@ -94,14 +84,14 @@ export default function EditProduct({
     let uploadedImageUrl: string[] = [];
 
     try {
-      if (!pid) {
+      if (!resolvedParams.pid) {
         toast.error("Invalid product ID");
         return;
       }
 
       // Handle images if provided
       if (data.images && data.images.length > 0) {
-        const folder = `products/${pid}/`;
+        const folder = `products/${resolvedParams.pid}/`;
         let x = 1;
 
         for (const image of data.images) {
@@ -115,14 +105,14 @@ export default function EditProduct({
           try {
             let fileToUpload: File;
             if (image instanceof Blob) {
-              fileToUpload = new File([image], `${pid}_${x}.jpg`, {
+              fileToUpload = new File([image], `${resolvedParams.pid}_${x}.jpg`, {
                 type: image.type,
               });
             } else {
               fileToUpload = image;
             }
 
-            const imageName = `${pid}_${x}`;
+            const imageName = `${resolvedParams.pid}_${x}`;
             const filePath = await uploadFile(fileToUpload, imageName, folder);
             const url = await getFile(filePath);
             uploadedImageUrl.push(url);
@@ -148,7 +138,7 @@ export default function EditProduct({
         ...(uploadedImageUrl.length > 0 && { images: uploadedImageUrl }),
       };
 
-      await updateDoc(doc(db, "products", pid), updateData);
+      await updateDoc(doc(db, "products", resolvedParams.pid), updateData);
       toast.success("Product updated successfully");
       router.push("/dashboard/product-list/");
 
