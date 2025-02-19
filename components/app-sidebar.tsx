@@ -14,6 +14,7 @@ import {
   Users,
   SquareTerminal,
   PersonStanding,
+  MessageSquare,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -86,11 +87,11 @@ const data = {
       icon: PersonStanding,
     },
   ],
-  projects: [
+  support: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      name: "Chat",
+      url: "/dashboard/chat",
+      icon: MessageSquare,
     },
     {
       name: "Sales & Marketing",
@@ -114,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects supports={data.support} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
