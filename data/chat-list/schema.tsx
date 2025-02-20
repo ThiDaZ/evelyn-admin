@@ -1,3 +1,4 @@
+import { FieldValue, Timestamp } from "firebase/firestore"
 import {z} from "zod"
 
 export const messageMap = z.object({
@@ -5,10 +6,7 @@ export const messageMap = z.object({
     chatId: z.string().optional(),
     content: z.string(),
     sender: z.enum(["user", "supporter"]),
-    timestamp: z.object({
-        seconds: z.number(),
-        nanoseconds: z.number()
-    }),
+    timestamp: z.union([z.instanceof(Timestamp), z.any()]),
     type: z.string(),
 })
 
@@ -19,7 +17,7 @@ export const chatSchema = z.object({
     supporter: z.string(),
     unreadCount: z.number(),
     userId: z.string(),
-    userAvatar: z.string(),
+    userAvatar: z.string().optional(),
 })
 
 export type Chat = z.infer<typeof chatSchema>

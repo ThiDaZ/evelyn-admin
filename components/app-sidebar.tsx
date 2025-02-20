@@ -28,8 +28,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { list } from "firebase/storage"
-
 
 const data = {
   user: {

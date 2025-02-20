@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { z } from "zod";
 import { chatSchema, messageMap } from "@/data/chat-list/schema";
 import { db } from "@/lib/firebase/config";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, Timestamp, updateDoc } from "firebase/firestore";
 
 
 const groupMessagesByDate = (messages: z.infer<typeof messageMap>[]) => {
@@ -18,25 +18,27 @@ const groupMessagesByDate = (messages: z.infer<typeof messageMap>[]) => {
   const seenMessageIds = new Set();
 
   messages.forEach((message) => {
-    // Skip if we've already seen this message
+    
+    const timestamp = message.timestamp;
+
     if (seenMessageIds.has(message.messageId)) {
       return;
     }
 
-    const date = format(
-      new Date(message.timestamp.seconds * 1000),
-      "yyyy-MM-dd"
-    );
-    if (!groups[date]) {
-      groups[date] = [];
+    // Check if timestamp is a Timestamp object
+    if (timestamp instanceof Timestamp) {
+      if (!timestamp.seconds) return; // Ensure timestamp is valid
+      const date = format(new Date(timestamp.seconds * 1000), "yyyy-MM-dd");
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(message);
+      seenMessageIds.add(message.messageId);
+    } else {
+      console.warn("Unexpected timestamp format:", timestamp);
     }
-
-    // Add message to group and mark as seen
-    groups[date].push(message);
-    seenMessageIds.add(message.messageId);
   });
-
-  // Sort messages within each group by timestamp
+  
   Object.keys(groups).forEach((date) => {
     groups[date].sort((a, b) => a.timestamp.seconds - b.timestamp.seconds);
   });
@@ -82,10 +84,7 @@ export default function ChatView({
       chatId: chat.id,
       content: newMessage,
       sender: "supporter",
-      timestamp: {
-        seconds: Math.floor(Date.now() / 1000),
-        nanoseconds: (Date.now() % 1000) * 1000000,
-      },
+      timestamp: serverTimestamp(),
       type: "text",
     };
 
@@ -140,8 +139,9 @@ export default function ChatView({
 
       {/* Messages */}
       <div className="overflow-y-auto p-4 space-y-4 h-full">
-        {Object.entries(groupMessagesByDate(chat.messages)).map(
-          ([date, msgs]) => (
+      {Object.entries(groupMessagesByDate(chat.messages))
+          .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
+          .map(([date, msgs]) => (
             <div key={date}>
               <div className="flex items-center my-4">
                 <div className="flex-grow border-t border-gray-700"></div>

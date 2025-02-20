@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 
 export default function EmptyState() {
   return (
@@ -16,7 +15,7 @@ export default function EmptyState() {
         </div>
         <h2 className="text-xl font-semibold mb-2">Your messages</h2>
         <p className="text-gray-400 text-sm mb-4">Send a message to start a chat.</p>
-        <Button>Send message</Button>
+        {/* <Button>Send message</Button> */}
       </div>
     </div>
   )
