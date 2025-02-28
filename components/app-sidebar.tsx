@@ -2,13 +2,8 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
   BookOpen,
-  Command,
-  Frame,
   GalleryVerticalEnd,
-  Map,
-  PieChart,
   List,
   Tag,
   Users,
@@ -31,25 +26,15 @@ import {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "admin",
+    email: "",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Evelyn",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      plan: "Admin",
     },
   ],
   navMain: [
@@ -90,16 +75,6 @@ const data = {
       name: "Chat",
       url: "/dashboard/chat",
       icon: MessageSquare,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 }
